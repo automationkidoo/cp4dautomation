@@ -2,14 +2,15 @@ apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   name: cp4d-root
-  namespace: argocd
+  namespace: openshift-gitops
 spec:
+  project: default
   source:
     repoURL: https://github.com/automationkidoo/cp4dautomation
     path: environments/dev
   destination:
     server: https://kubernetes.default.svc
-    namespace: argocd
+    namespace: openshift-gitops
   syncPolicy:
     automated:
       prune: true
