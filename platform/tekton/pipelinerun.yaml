@@ -2,6 +2,7 @@ apiVersion: tekton.dev/v1
 kind: PipelineRun
 metadata:
   generateName: cp4d-install-run-
+  namespace: cp4d
 spec:
   pipelineRef:
     name: cp4d-install-pipeline
