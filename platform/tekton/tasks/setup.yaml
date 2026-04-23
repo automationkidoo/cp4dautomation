@@ -1,0 +1,12 @@
+apiVersion: tekton.dev/v1
+kind: Task
+metadata:
+  name: cp4d-setup
+spec:
+  params:
+    - name: namespace
+  steps:
+    - name: create-ns
+      image: quay.io/openshift/origin-cli
+      script: |
+        oc create ns $(params.namespace) || true

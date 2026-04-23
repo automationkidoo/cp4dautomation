@@ -1,0 +1,3 @@
+resources:
+  - ../../platform/cp4d
+  - ../../platform/tekton

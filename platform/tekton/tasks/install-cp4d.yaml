@@ -1,0 +1,25 @@
+apiVersion: tekton.dev/v1
+kind: Task
+metadata:
+  name: cp4d-install
+spec:
+  params:
+    - name: version
+  steps:
+    - name: install
+      image: icr.io/cpopen/cpd/cli:latest
+      script: |
+        cpd-cli manage apply-cluster-components \
+          --release=$(params.version) \
+          --license_acceptance=true
+
+        cpd-cli manage apply-olm \
+          --release=$(params.version)
+
+        cpd-cli manage apply-cr \
+          --components=cpd_platform \
+          --release=$(params.version) \
+          --namespace=cp4d \
+          --block_storage_class=ocs-storagecluster-ceph-rbd \
+          --file_storage_class=ocs-storagecluster-cephfs \
+          --license_acceptance=true

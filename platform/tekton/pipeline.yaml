@@ -1,0 +1,24 @@
+apiVersion: tekton.dev/v1
+kind: Pipeline
+metadata:
+  name: cp4d-install-pipeline
+spec:
+  params:
+    - name: cp4d-version
+    - name: namespace
+  tasks:
+
+    - name: setup
+      taskRef:
+        name: cp4d-setup
+      params:
+        - name: namespace
+          value: $(params.namespace)
+
+    - name: install
+      runAfter: [setup]
+      taskRef:
+        name: cp4d-install
+      params:
+        - name: version
+          value: $(params.cp4d-version)

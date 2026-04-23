@@ -1,0 +1,5 @@
+resources:
+  - pipeline.yaml
+  - pipelinerun.yaml
+  - tasks/setup.yaml
+  - tasks/install-cp4d.yaml

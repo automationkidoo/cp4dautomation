@@ -1,0 +1,12 @@
+apiVersion: tekton.dev/v1
+kind: PipelineRun
+metadata:
+  name: cp4d-install-run
+spec:
+  pipelineRef:
+    name: cp4d-install-pipeline
+  params:
+    - name: cp4d-version
+      value: "5.3.1"
+    - name: namespace
+      value: "cp4d"

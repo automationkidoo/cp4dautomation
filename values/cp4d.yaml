@@ -1,0 +1,9 @@
+cp4d:
+  version: "5.3.1"
+  namespace: "cp4d"
+  blockStorage: "ocs-storagecluster-ceph-rbd"
+  fileStorage: "ocs-storagecluster-cephfs"
+
+services:
+  ws: false
+  wml: false
