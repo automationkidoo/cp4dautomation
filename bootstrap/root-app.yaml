@@ -10,7 +10,7 @@ spec:
     path: environments/dev
   destination:
     server: https://kubernetes.default.svc
-    namespace: openshift-gitops
+    namespace: cp4d
   syncPolicy:
     automated:
       prune: true
