@@ -2,6 +2,7 @@ apiVersion: tekton.dev/v1
 kind: Task
 metadata:
   name: cp4d-install
+  namespace: cp4d
 spec:
   params:
     - name: version
