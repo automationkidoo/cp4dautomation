@@ -2,6 +2,7 @@ apiVersion: tekton.dev/v1
 kind: Pipeline
 metadata:
   name: cp4d-install-pipeline
+  namespace: cp4d
 spec:
   params:
     - name: cp4d-version
