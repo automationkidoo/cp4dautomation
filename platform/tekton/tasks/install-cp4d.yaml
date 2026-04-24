@@ -21,16 +21,25 @@ spec:
         microdnf install -y curl tar gzip
 
         echo "Downloading cpd-cli"
-        curl -L -f -o cpd-cli.tgz https://github.com/IBM/cpd-cli/releases/download/v14.3.1/cpd-cli-linux-EE-14.3.1.tgz
+        curl -L -f -o cpd-cli-linux-EE-14.3.1.tgz https://github.com/IBM/cpd-cli/releases/download/v14.3.1/cpd-cli-linux-EE-14.3.1.tgz
 
         echo "Extracting"
-        tar -xzf cpd-cli.tgz
+        tar -xzf cpd-cli-linux-EE-14.3.1.tgz
 
-        echo "Setting executable"
-        chmod +x cpd-cli-linux-*/cpd-cli
-        export PATH=$PWD/cpd-cli-linux-*/:$PATH
+        
+        echo "Locate CLI directory"
+        CLI_DIR=$(find . -type d -name "cpd-cli*")
 
-        echo " Verify CLI"
+        echo "CLI_DIR=$CLI_DIR"
+
+        echo "Set executable"
+        chmod +x $CLI_DIR/cpd-cli
+
+        echo "Add to PATH"
+        export PATH=$CLI_DIR:$PATH
+
+        echo "Verify CLI"
+        which cpd-cli
         cpd-cli version
 
         echo "Login check"
