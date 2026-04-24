@@ -49,7 +49,11 @@ spec:
         echo "Downloading oc CLI (OCP 4.18)"
 
         curl -L -o oc.tar.gz \
-        https://mirror.openshift.com/pub/openshift-v4/clients/ocp/4.18.0/openshift-client-linux.tar.gz
+        https://mirror.openshift.com/pub/openshift-v4/clients/ocp/stable-4.18/openshift-client-linux.tar.gz
+        
+        echo "Validate download"
+        ls -lh oc.tar.gz
+        file oc.tar.gz
 
         echo "Extracting oc"
         tar -xzf oc.tar.gz
