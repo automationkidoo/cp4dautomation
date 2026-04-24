@@ -26,20 +26,23 @@ spec:
         echo "Extracting"
         tar -xzf cpd-cli.tgz
         
-        echo "Locate cpd-cli binary"
-        CLI_BIN=$(tar -tf cpd-cli.tgz | grep '/cpd-cli$' | head -1)
+        echo "Locate CLI root directory"
+        CLI_ROOT=$(tar -tf cpd-cli.tgz | head -1 | cut -d/ -f1)
 
-        echo "CLI_BIN path inside archive: $CLI_BIN"
+        echo "CLI_ROOT=$CLI_ROOT"
 
-        echo "Extract exact binary path"
-        tar -xzf cpd-cli.tgz "$CLI_BIN"
+        echo "Copy CLI + plugins"
+        cp -r $CLI_ROOT/* /usr/local/bin/
 
-        echo "Move to /usr/local/bin"
-        cp "$CLI_BIN" /usr/local/bin/cpd-cli
+        echo "Set permissions"
         chmod +x /usr/local/bin/cpd-cli
 
+        echo "Verify structure"
+        ls -l /usr/local/bin/
+        ls -l /usr/local/bin/plugins
+        ls -l /usr/local/bin/LICENSES
+
         echo "Verify CLI"
-        ls -l /usr/local/bin/cpd-cli
         cpd-cli version
         
         echo "Login check"
