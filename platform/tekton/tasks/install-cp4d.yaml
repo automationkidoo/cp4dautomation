@@ -45,6 +45,23 @@ spec:
         echo "Verify CLI"
         cpd-cli version
         
+        
+        echo "Downloading oc CLI (OCP 4.18)"
+
+        curl -L -o oc.tar.gz \
+        https://mirror.openshift.com/pub/openshift-v4/clients/ocp/4.18.0/openshift-client-linux.tar.gz
+
+        echo "Extracting oc"
+        tar -xzf oc.tar.gz
+
+        echo "Move oc to /usr/local/bin"
+        mv oc kubectl /usr/local/bin/
+
+        chmod +x /usr/local/bin/oc
+
+        echo "Verify oc"
+        oc version --client
+        
         echo "Login check"
         oc whoami
         
