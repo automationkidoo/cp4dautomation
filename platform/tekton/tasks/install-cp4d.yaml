@@ -67,14 +67,13 @@ spec:
         echo "Verify oc"
         oc version --client
         
-        echo "Login check"
+        
+        echo "Set CPD CLI mode (NO PODMAN)"
+        export CPD_CLI_MANAGE_USE_CASE=OCP
+        export CPD_USE_PODMAN=false
+        
+        echo "Verify oc"
         oc whoami
-        
-        echo "Installing Podman"
-        dnf install -y podman
-        
-        echo "Verify podman"
-        podman --version
         
         echo "Installing CP4D"
         cpd-cli manage apply-cluster-components \
