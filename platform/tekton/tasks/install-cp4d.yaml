@@ -70,6 +70,12 @@ spec:
         echo "Login check"
         oc whoami
         
+        echo "Installing Podman"
+        sudo dnf install -y podman
+        
+        echo "Verify podman"
+        podman --version
+        
         echo "Installing CP4D"
         cpd-cli manage apply-cluster-components \
           --release=$(params.version) \
