@@ -18,7 +18,10 @@ spec:
       script: |
         set -e
         echo "Installing required tools"
-        microdnf install -y tar gzip
+        microdnf install -y tar gzip podman
+        
+        echo "Starting podman service"
+        podman info || echo "Podman installed but may need additional setup"
 
         echo "Downloading cpd-cli"
         curl -L -f -o cpd-cli.tgz https://github.com/IBM/cpd-cli/releases/download/v14.3.1/cpd-cli-linux-EE-14.3.1.tgz
@@ -67,33 +70,27 @@ spec:
         echo "Verify oc"
         oc version --client
         
-        
-        echo "Set CPD CLI mode (NO PODMAN)"
-        export CPD_CLI_MANAGE_USE_CASE=OCP
-        export CPD_USE_PODMAN=false
-        
-        echo "Verify oc"
+        echo "Verify oc connection"
         oc whoami
         
         echo "Installing CP4D"
         cpd-cli manage apply-cluster-components \
         --release=$(params.version) \
-        --platform=ocp \
         --components=cpfs \
-        --license_acceptance=true \
-        --skip-podman-check=true
+        --license_acceptance=true
         
         #cpd-cli manage apply-cluster-components \
          # --release=$(params.version) \
           #--license_acceptance=true
 
         cpd-cli manage apply-olm \
-          --release=$(params.version)
+          --release=$(params.version) \
+          --cpd_operator_ns=ibm-common-services
 
         cpd-cli manage apply-cr \
           --components=cpd_platform \
           --release=$(params.version) \
-          --namespace=cp4d \
+          --cpd_instance_ns=cp4d \
           --block_storage_class=ocs-storagecluster-ceph-rbd \
           --file_storage_class=ocs-storagecluster-cephfs \
           --license_acceptance=true
