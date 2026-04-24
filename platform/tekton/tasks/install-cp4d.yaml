@@ -18,7 +18,7 @@ spec:
       script: |
         set -e
         echo "Installing required tools"
-        microdnf install -y curl tar gzip
+        microdnf install -y tar gzip
 
         echo "Downloading cpd-cli"
         curl -L -f -o cpd-cli.tgz https://github.com/IBM/cpd-cli/releases/download/v14.3.1/cpd-cli-linux-EE-14.3.1.tgz
