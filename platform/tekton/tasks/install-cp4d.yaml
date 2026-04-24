@@ -8,7 +8,7 @@ spec:
     - name: version
   steps:
     - name: install
-      image: icr.io/cpopen/cpd/cli:latest
+      image: icr.io/cpopen/cpd/cli:5.3.1
       script: |
         cpd-cli manage apply-cluster-components \
           --release=$(params.version) \
