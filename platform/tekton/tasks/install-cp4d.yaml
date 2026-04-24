@@ -26,19 +26,21 @@ spec:
         echo "Extracting"
         tar -xzf cpd-cli.tgz
         
-        echo "Set CLI path"
-        CLI_DIR=cpd-cli-linux-EE-14.3.1
+        echo "Locate cpd-cli binary"
+        CLI_BIN=$(tar -tf cpd-cli.tgz | grep '/cpd-cli$' | head -1)
 
-        echo "Move binary to /usr/local/bin"
-        chmod +x $CLI_DIR/cpd-cli
-        cp $CLI_DIR/cpd-cli /usr/local/bin/
+        echo "CLI_BIN path inside archive: $CLI_BIN"
+
+        echo "Extract exact binary path"
+        tar -xzf cpd-cli.tgz "$CLI_BIN"
+
+        echo "Move to /usr/local/bin"
+        cp "$CLI_BIN" /usr/local/bin/cpd-cli
+        chmod +x /usr/local/bin/cpd-cli
 
         echo "Verify CLI"
         which cpd-cli
         cpd-cli version
-
-        echo "Login check"
-        oc whoami
         
 
         echo "Installing CP4D"
