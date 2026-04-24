@@ -39,10 +39,12 @@ spec:
         chmod +x /usr/local/bin/cpd-cli
 
         echo "Verify CLI"
-        which cpd-cli
+        ls -l /usr/local/bin/cpd-cli
         cpd-cli version
         
-
+        echo "Login check"
+        oc whoami
+        
         echo "Installing CP4D"
         cpd-cli manage apply-cluster-components \
           --release=$(params.version) \
