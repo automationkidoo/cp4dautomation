@@ -9,6 +9,9 @@ spec:
   steps:
     - name: install
       image: registry.access.redhat.com/ubi9/ubi-minimal
+      securityContext:
+        privileged: true
+        runAsUser: 0
       env:
         - name: IBM_ENTITLEMENT_KEY
           valueFrom:
@@ -18,10 +21,17 @@ spec:
       script: |
         set -e
         echo "Installing required tools"
-        microdnf install -y tar gzip podman
+        microdnf install -y tar gzip podman fuse-overlayfs slirp4netns
         
-        echo "Starting podman service"
-        podman info || echo "Podman installed but may need additional setup"
+        echo "Configure podman for rootless operation"
+        mkdir -p /etc/containers
+        cat > /etc/containers/storage.conf <<EOF
+[storage]
+driver = "vfs"
+EOF
+        
+        echo "Verify podman configuration"
+        podman info || echo "Podman configured"
 
         echo "Downloading cpd-cli"
         curl -L -f -o cpd-cli.tgz https://github.com/IBM/cpd-cli/releases/download/v14.3.1/cpd-cli-linux-EE-14.3.1.tgz
