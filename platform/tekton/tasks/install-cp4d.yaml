@@ -71,7 +71,7 @@ spec:
         oc whoami
         
         echo "Installing Podman"
-        sudo dnf install -y podman
+        dnf install -y podman
         
         echo "Verify podman"
         podman --version
