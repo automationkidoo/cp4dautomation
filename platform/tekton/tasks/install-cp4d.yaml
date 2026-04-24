@@ -8,7 +8,7 @@ spec:
     - name: version
   steps:
     - name: install
-      image: registry.access.redhat.com/ubi8/ubi-minimal
+      image: registry.access.redhat.com/ubi9/ubi-minimal
       env:
         - name: IBM_ENTITLEMENT_KEY
           valueFrom:
@@ -18,7 +18,7 @@ spec:
       script: |
         set -e
         echo "Installing required tools"
-        microdnf install -y curl tar gzip
+        microdnf install -y tar gzip
 
         echo "Downloading cpd-cli"
         curl -L -f -o cpd-cli.tgz https://github.com/IBM/cpd-cli/releases/download/v14.3.1/cpd-cli-linux-EE-14.3.1.tgz
@@ -26,25 +26,66 @@ spec:
         echo "Extracting"
         tar -xzf cpd-cli.tgz
         
-        echo "Set CLI path"
-        CLI_DIR=cpd-cli-linux-EE-14.3.1
+        echo "Locate CLI root directory"
+        CLI_ROOT=$(tar -tf cpd-cli.tgz | head -1 | cut -d/ -f1)
 
-        echo "Move binary to /usr/local/bin"
-        chmod +x $CLI_DIR/cpd-cli
-        cp $CLI_DIR/cpd-cli /usr/local/bin/
+        echo "CLI_ROOT=$CLI_ROOT"
+
+        echo "Copy CLI + plugins"
+        cp -r $CLI_ROOT/* /usr/local/bin/
+
+        echo "Set permissions"
+        chmod +x /usr/local/bin/cpd-cli
+
+        echo "Verify structure"
+        ls -l /usr/local/bin/
+        ls -l /usr/local/bin/plugins
+        ls -l /usr/local/bin/LICENSES
 
         echo "Verify CLI"
-        which cpd-cli
         cpd-cli version
+        
+        
+        echo "Downloading oc CLI (OCP 4.18)"
 
-        echo "Login check"
+        curl -L -o oc.tar.gz \
+        https://mirror.openshift.com/pub/openshift-v4/clients/ocp/stable-4.18/openshift-client-linux.tar.gz
+        
+        echo "Validate download"
+        ls -lh oc.tar.gz
+        echo "File size:"
+        ls -lh oc.tar.gz
+
+        echo "Extracting oc"
+        tar -xzf oc.tar.gz
+
+        echo "Move oc to /usr/local/bin"
+        mv oc kubectl /usr/local/bin/
+
+        chmod +x /usr/local/bin/oc
+
+        echo "Verify oc"
+        oc version --client
+        
+        
+        echo "Set CPD CLI mode (NO PODMAN)"
+        export CPD_CLI_MANAGE_USE_CASE=OCP
+        export CPD_USE_PODMAN=false
+        
+        echo "Verify oc"
         oc whoami
         
-
         echo "Installing CP4D"
         cpd-cli manage apply-cluster-components \
-          --release=$(params.version) \
-          --license_acceptance=true
+        --release=$(params.version) \
+        --platform=ocp \
+        --components=cpfs \
+        --license_acceptance=true \
+        --skip-podman-check=true
+        
+        #cpd-cli manage apply-cluster-components \
+         # --release=$(params.version) \
+          #--license_acceptance=true
 
         cpd-cli manage apply-olm \
           --release=$(params.version)
