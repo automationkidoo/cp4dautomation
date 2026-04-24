@@ -53,7 +53,8 @@ spec:
         
         echo "Validate download"
         ls -lh oc.tar.gz
-        file oc.tar.gz
+        echo "File size:"
+        ls -lh oc.tar.gz
 
         echo "Extracting oc"
         tar -xzf oc.tar.gz
