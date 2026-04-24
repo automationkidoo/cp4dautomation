@@ -77,8 +77,15 @@ spec:
         
         echo "Installing CP4D"
         cpd-cli manage apply-cluster-components \
-          --release=$(params.version) \
-          --license_acceptance=true
+        --release=$(params.version) \
+        --platform=ocp \
+        --components=cpfs \
+        --license_acceptance=true \
+        --skip-podman-check=true
+        
+        #cpd-cli manage apply-cluster-components \
+         # --release=$(params.version) \
+          #--license_acceptance=true
 
         cpd-cli manage apply-olm \
           --release=$(params.version)
