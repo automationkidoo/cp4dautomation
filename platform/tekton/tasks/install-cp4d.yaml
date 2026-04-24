@@ -8,8 +8,35 @@ spec:
     - name: version
   steps:
     - name: install
-      image: icr.io/cpopen/cpd/cli:5.3.1
+      image: registry.access.redhat.com/ubi8/ubi-minimal
+      env:
+        - name: IBM_ENTITLEMENT_KEY
+          valueFrom:
+            secretKeyRef:
+              name: ibm-entitlement-key
+              key: key
       script: |
+        set -e
+        echo "Installing required tools"
+        microdnf install -y curl tar gzip
+
+        echo "Downloading cpd-cli"
+        curl -L -o cpd-cli.tgz https://github.com/IBM/cpd-cli/releases/latest/download/cpd-cli-linux.tgz
+
+        echo "Extracting"
+        tar -xzf cpd-cli.tgz
+
+        echo "Setting executable"
+        chmod +x cpd-cli-linux-*/cpd-cli
+        export PATH=$PWD/cpd-cli-linux-*/:$PATH
+
+        echo " Verify CLI"
+        cpd-cli version
+
+        echo "Login check"
+        oc whoami
+
+        echo "Installing CP4D"
         cpd-cli manage apply-cluster-components \
           --release=$(params.version) \
           --license_acceptance=true
