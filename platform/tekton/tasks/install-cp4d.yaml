@@ -42,6 +42,19 @@ spec:
         ls -l /usr/local/bin/plugins
         ls -l /usr/local/bin/LICENSES
 
+        echo "Create dummy podman script to satisfy cpd-cli check"
+        cat > /usr/local/bin/podman <<'EOF'
+#!/bin/bash
+# Dummy podman script - cpd-cli will use oc instead
+echo "Podman dummy script - not actually used"
+exit 0
+EOF
+        chmod +x /usr/local/bin/podman
+        
+        echo "Verify dummy podman exists"
+        which podman
+        podman --version || echo "Dummy podman installed"
+        
         echo "Set CPD CLI to use OCP native mode (no podman)"
         export CPD_CLI_MANAGE_USE_CASE=OCP
         export CPD_USE_PODMAN=false
