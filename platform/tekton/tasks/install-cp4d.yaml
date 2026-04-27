@@ -82,15 +82,13 @@ spec:
         cpd-cli manage apply-cluster-components \
         --release=$(params.version) \
         --components=cpfs \
-        --license_acceptance=true
-        
-        #cpd-cli manage apply-cluster-components \
-         # --release=$(params.version) \
-          #--license_acceptance=true
+        --license_acceptance=true \
+        --skip-podman-check=true
 
         cpd-cli manage apply-olm \
           --release=$(params.version) \
-          --cpd_operator_ns=ibm-common-services
+          --cpd_operator_ns=ibm-common-services \
+          --skip-podman-check=true
 
         cpd-cli manage apply-cr \
           --components=cpd_platform \
@@ -98,4 +96,5 @@ spec:
           --cpd_instance_ns=cp4d \
           --block_storage_class=ocs-storagecluster-ceph-rbd \
           --file_storage_class=ocs-storagecluster-cephfs \
-          --license_acceptance=true
+          --license_acceptance=true \
+          --skip-podman-check=true
