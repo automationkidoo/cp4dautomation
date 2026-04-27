@@ -9,9 +9,6 @@ spec:
   steps:
     - name: install
       image: registry.access.redhat.com/ubi9/ubi-minimal
-      securityContext:
-        privileged: true
-        runAsUser: 0
       env:
         - name: IBM_ENTITLEMENT_KEY
           valueFrom:
@@ -21,33 +18,8 @@ spec:
       script: |
         set -e
         echo "Installing required tools"
-        microdnf install -y tar gzip podman fuse-overlayfs slirp4netns shadow-utils
+        microdnf install -y tar gzip
         
-        echo "Configure subuid and subgid for root user"
-        echo "root:100000:65536" > /etc/subuid
-        echo "root:100000:65536" > /etc/subgid
-        
-        echo "Configure podman storage and containers"
-        mkdir -p /etc/containers
-        cat > /etc/containers/storage.conf <<EOF
-[storage]
-driver = "vfs"
-runroot = "/run/containers/storage"
-graphroot = "/var/lib/containers/storage"
-EOF
-
-        cat > /etc/containers/containers.conf <<EOF
-[engine]
-cgroup_manager = "cgroupfs"
-events_logger = "file"
-EOF
-        
-        echo "Initialize podman storage"
-        podman system reset --force || true
-        
-        echo "Verify podman configuration"
-        podman info
-
         echo "Downloading cpd-cli"
         curl -L -f -o cpd-cli.tgz https://github.com/IBM/cpd-cli/releases/download/v14.3.1/cpd-cli-linux-EE-14.3.1.tgz
 
@@ -70,6 +42,10 @@ EOF
         ls -l /usr/local/bin/plugins
         ls -l /usr/local/bin/LICENSES
 
+        echo "Set CPD CLI to use OCP native mode (no podman)"
+        export CPD_CLI_MANAGE_USE_CASE=OCP
+        export CPD_USE_PODMAN=false
+        
         echo "Verify CLI"
         cpd-cli version
         
@@ -97,6 +73,10 @@ EOF
         
         echo "Verify oc connection"
         oc whoami
+        
+        echo "Re-confirm CPD CLI environment variables"
+        export CPD_CLI_MANAGE_USE_CASE=OCP
+        export CPD_USE_PODMAN=false
         
         echo "Installing CP4D"
         cpd-cli manage apply-cluster-components \
