@@ -46,14 +46,16 @@ spec:
         cat > /usr/local/bin/podman <<'EOF'
 #!/bin/bash
 # Dummy podman script - cpd-cli will use oc instead
-echo "Podman dummy script - not actually used"
+echo "Podman version 4.0.0"
 exit 0
 EOF
         chmod +x /usr/local/bin/podman
         
         echo "Verify dummy podman exists"
         which podman
-        podman --version || echo "Dummy podman installed"
+        ls -la /usr/local/bin/podman
+        /usr/local/bin/podman --version
+        echo "PATH=$PATH"
         
         echo "Set CPD CLI to use OCP native mode (no podman)"
         export CPD_CLI_MANAGE_USE_CASE=OCP
