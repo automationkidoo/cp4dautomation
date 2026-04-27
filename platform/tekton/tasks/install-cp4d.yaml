@@ -81,18 +81,21 @@ spec:
         echo "Installing CP4D"
         cpd-cli manage apply-cluster-components \
         --release=$(params.version) \
+        --platform=ocp \
         --components=cpfs \
         --license_acceptance=true \
         --skip-podman-check=true
 
         cpd-cli manage apply-olm \
           --release=$(params.version) \
+          --platform=ocp \
           --cpd_operator_ns=ibm-common-services \
           --skip-podman-check=true
 
         cpd-cli manage apply-cr \
           --components=cpd_platform \
           --release=$(params.version) \
+          --platform=ocp \
           --cpd_instance_ns=cp4d \
           --block_storage_class=ocs-storagecluster-ceph-rbd \
           --file_storage_class=ocs-storagecluster-cephfs \
